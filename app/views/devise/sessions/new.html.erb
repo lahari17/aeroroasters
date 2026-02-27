@@ -1,0 +1,30 @@
+<div class="auth-page">
+  <div class="auth-card">
+    <div class="auth-card__logo">☕ AeroRoasters</div>
+    <h1 class="auth-card__title">Welcome back</h1>
+    <p class="auth-card__sub">Sign in to your account to continue.</p>
+
+    <%= form_for(resource, as: resource_name, url: session_path(resource_name), html: { class: 'auth-form' }) do |f| %>
+      <div>
+        <%= f.label :email, class: 'label' %>
+        <%= f.email_field :email, autofocus: true, autocomplete: 'email', class: 'input' %>
+      </div>
+      <div>
+        <%= f.label :password, class: 'label' %>
+        <%= f.password_field :password, autocomplete: 'current-password', class: 'input' %>
+      </div>
+      <% if devise_mapping.rememberable? %>
+        <div class="checkbox-row">
+          <%= f.check_box :remember_me %>
+          <%= f.label :remember_me %>
+        </div>
+      <% end %>
+      <%= f.submit 'Sign In', class: 'btn btn--primary btn--full btn--lg' %>
+    <% end %>
+
+    <div class="auth-links">
+      <p><%= link_to 'Forgot your password?', new_password_path(resource_name) %></p>
+      <p>No account? <%= link_to 'Register here', new_registration_path(resource_name) %></p>
+    </div>
+  </div>
+</div>

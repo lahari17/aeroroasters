@@ -1,0 +1,56 @@
+<% content_for :title, "#{@product.name} – AeroRoasters" %>
+
+<section class="product-detail container">
+  <div class="product-detail__grid">
+    <!-- Image Panel -->
+    <div class="product-detail__image-wrap">
+      <% if @product.image_url.present? %>
+        <img src="<%= @product.image_url %>" alt="<%= @product.name %>" class="product-detail__image">
+      <% else %>
+        <div class="product-detail__placeholder">☕</div>
+      <% end %>
+      <span class="badge badge--category"><%= @product.category.name %></span>
+    </div>
+
+    <!-- Info Panel -->
+    <div class="product-detail__info">
+      <p class="product-detail__category"><%= @product.category.name %></p>
+      <h1 class="product-detail__title"><%= @product.name %></h1>
+      <p class="product-detail__price"><%= format_price(@product.price) %></p>
+      <%= stock_badge(@product) %>
+
+      <p class="product-detail__description"><%= @product.description %></p>
+
+      <div class="product-detail__actions">
+        <% if @product.in_stock? %>
+          <%= form_with url: line_items_path, method: :post, local: true, class: 'add-to-cart-form' do |f| %>
+            <%= f.hidden_field :product_id, value: @product.id %>
+            <div class="quantity-selector">
+              <label>Qty</label>
+              <%= f.number_field :quantity, value: 1, min: 1, max: @product.stock_count, class: 'input input--qty' %>
+            </div>
+            <%= f.submit '🛒 Add to Cart', class: 'btn btn--primary btn--lg' %>
+          <% end %>
+        <% else %>
+          <button class="btn btn--disabled btn--lg" disabled>Out of Stock</button>
+        <% end %>
+
+        <% if user_signed_in? %>
+          <%= link_to '♡ Save to Wishlist', add_product_wishlist_path(product_id: @product.id), method: :post, class: 'btn btn--outline' %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <!-- Related Products -->
+  <% if @related.any? %>
+    <div class="related-section">
+      <h2 class="section-title">You Might Also Like</h2>
+      <div class="products-grid">
+        <% @related.each do |product| %>
+          <%= render 'product_card', product: product %>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+</section>

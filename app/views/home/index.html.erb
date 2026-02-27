@@ -1,0 +1,70 @@
+<% content_for :title, "AeroRoasters – Premium Coffee" %>
+
+<!-- Hero Section -->
+<section class="hero">
+  <div class="hero__content">
+    <p class="hero__eyebrow">Ethically Sourced · Expertly Roasted</p>
+    <h1 class="hero__title">Coffee That<br>Moves You</h1>
+    <p class="hero__sub">Discover single-origin beans and seasonal blends brewed for those who care about every cup.</p>
+    <div class="hero__actions">
+      <%= link_to 'Shop All Coffee', products_path, class: 'btn btn--primary btn--lg' %>
+      <a href="#featured" class="btn btn--ghost btn--lg">Explore Blends</a>
+    </div>
+  </div>
+  <div class="hero__overlay"></div>
+</section>
+
+<!-- Categories Strip -->
+<section class="categories-strip">
+  <div class="container">
+    <h2 class="section-title">Browse by Category</h2>
+    <div class="categories-grid">
+      <% @categories.each do |category| %>
+        <%= link_to products_path(category: category.slug), class: 'category-card' do %>
+          <span class="category-card__icon"><%= category_icon(category.slug) %></span>
+          <span class="category-card__name"><%= category.name %></span>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+</section>
+
+<!-- Featured Products -->
+<section class="featured" id="featured">
+  <div class="container">
+    <div class="section-header">
+      <h2 class="section-title">Featured Blends</h2>
+      <p class="section-sub">Hand-picked favourites from our roasters.</p>
+    </div>
+    <div class="products-grid">
+      <% @featured_products.each do |product| %>
+        <%= render 'products/product_card', product: product %>
+      <% end %>
+    </div>
+    <div class="text-center mt-8">
+      <%= link_to 'View All Products →', products_path, class: 'btn btn--outline' %>
+    </div>
+  </div>
+</section>
+
+<!-- Story Section -->
+<section class="story">
+  <div class="story__inner container">
+    <div class="story__text">
+      <p class="story__label">Our Story</p>
+      <h2 class="story__title">Rooted in Craft,<br>Driven by Taste</h2>
+      <p class="story__body">
+        Founded by coffee obsessives who spent years sourcing the finest beans across Ethiopia, Colombia,
+        and Guatemala — AeroRoasters brings you the world's best flavours, one bag at a time.
+      </p>
+      <%= link_to 'Meet the Roasters', products_path, class: 'btn btn--primary' %>
+    </div>
+    <div class="story__visual">
+      <div class="story__stats">
+        <div class="stat"><span class="stat__num">12+</span><span class="stat__label">Origins</span></div>
+        <div class="stat"><span class="stat__num">50k</span><span class="stat__label">Happy Drinkers</span></div>
+        <div class="stat"><span class="stat__num">100%</span><span class="stat__label">Ethical</span></div>
+      </div>
+    </div>
+  </div>
+</section>

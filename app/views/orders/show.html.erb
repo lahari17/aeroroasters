@@ -1,0 +1,39 @@
+<% content_for :title, "Order ##{@order.id} – AeroRoasters" %>
+
+<section class="order-detail container">
+  <div class="order-detail__header">
+    <div>
+      <h1 class="page-title">Order #<%= @order.id %></h1>
+      <p class="text-muted">Placed on <%= @order.created_at.strftime('%B %d, %Y at %H:%M') %></p>
+    </div>
+    <span class="status-pill <%= order_status_class(@order.status) %>"><%= @order.status.capitalize %></span>
+  </div>
+
+  <div class="order-detail__shipping">
+    <h3>Shipping To</h3>
+    <p><%= @order.shipping_address %></p>
+  </div>
+
+  <div class="order-detail__items">
+    <h3>Items</h3>
+    <% @order.order_items.each do |item| %>
+      <div class="order-item">
+        <div class="order-item__info">
+          <p class="order-item__name"><%= item.product.name %></p>
+          <p class="order-item__meta">Qty: <%= item.quantity %> &middot; <%= format_price(item.price) %> each</p>
+        </div>
+        <p class="order-item__subtotal"><%= format_price(item.subtotal) %></p>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="order-detail__total">
+    <span>Total</span>
+    <span class="order-detail__total-price"><%= format_price(@order.total_price) %></span>
+  </div>
+
+  <div class="mt-6">
+    <%= link_to '← Back to Orders', orders_path, class: 'btn btn--ghost' %>
+    <%= link_to 'Shop More Coffee', products_path, class: 'btn btn--primary' %>
+  </div>
+</section>

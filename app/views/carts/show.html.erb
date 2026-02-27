@@ -1,0 +1,58 @@
+<% content_for :title, "My Cart – AeroRoasters" %>
+
+<section class="cart-page container">
+  <h1 class="page-title">Your Cart</h1>
+
+  <% if @cart.line_items.empty? %>
+    <div class="empty-state">
+      <p>☕ Your cart is empty.</p>
+      <%= link_to 'Start Shopping', products_path, class: 'btn btn--primary' %>
+    </div>
+  <% else %>
+    <div class="cart-layout">
+      <div class="cart-items">
+        <% @cart.line_items.each do |item| %>
+          <div class="cart-item">
+            <div class="cart-item__info">
+              <% if item.product.image_url.present? %>
+                <img src="<%= item.product.image_url %>" alt="<%= item.product.name %>" class="cart-item__img">
+              <% else %>
+                <div class="cart-item__img cart-item__img--placeholder">☕</div>
+              <% end %>
+              <div>
+                <p class="cart-item__name"><%= link_to item.product.name, product_path(item.product.slug) %></p>
+                <p class="cart-item__unit"><%= format_price(item.price) %> each</p>
+              </div>
+            </div>
+            <div class="cart-item__controls">
+              <%= form_with url: line_item_path(item), method: :patch, local: true, class: 'qty-form' do |f| %>
+                <%= f.number_field :quantity, value: item.quantity, min: 1, class: 'input input--qty' %>
+                <%= f.submit 'Update', class: 'btn btn--sm btn--ghost' %>
+              <% end %>
+              <%= link_to '✕', line_item_path(item), data: { turbo_method: :delete, turbo_confirm: 'Remove item?' }, class: 'cart-item__remove' %>
+            </div>
+            <p class="cart-item__subtotal"><%= format_price(item.subtotal) %></p>
+          </div>
+        <% end %>
+      </div>
+
+      <aside class="cart-summary">
+        <h3 class="cart-summary__title">Order Summary</h3>
+        <div class="cart-summary__row">
+          <span>Subtotal (<%= @cart.item_count %> items)</span>
+          <span><%= format_price(@cart.total_price) %></span>
+        </div>
+        <div class="cart-summary__row">
+          <span>Shipping</span>
+          <span class="text-green">Free</span>
+        </div>
+        <div class="cart-summary__row cart-summary__row--total">
+          <span>Total</span>
+          <span><%= format_price(@cart.total_price) %></span>
+        </div>
+        <%= link_to 'Proceed to Checkout', new_checkout_path, class: 'btn btn--primary btn--full btn--lg' %>
+        <%= link_to 'Continue Shopping', products_path, class: 'btn btn--ghost btn--full' %>
+      </aside>
+    </div>
+  <% end %>
+</section>

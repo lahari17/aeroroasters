@@ -1,0 +1,81 @@
+<% content_for :title, "Order Confirmed! – AeroRoasters" %>
+
+<section class="success-page">
+  <div class="success-card container-sm">
+
+    <!-- Animated checkmark -->
+    <div class="success-icon">
+      <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+        <circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none"/>
+        <path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+      </svg>
+    </div>
+
+    <p class="success-eyebrow">Your order is confirmed</p>
+    <h1 class="success-title">Thank You, <%= current_user.first_name %>! ☕</h1>
+    <p class="success-sub">
+      Order <strong>#<%= @order.id %></strong> has been placed successfully.<br>
+      Your AeroRoasters coffee is being prepared with care.
+    </p>
+
+    <!-- Order Details Card -->
+    <div class="success-order-card">
+      <div class="success-order-card__row">
+        <span class="success-order-card__label">Order Number</span>
+        <span class="success-order-card__value">#<%= @order.id %></span>
+      </div>
+      <div class="success-order-card__row">
+        <span class="success-order-card__label">Date</span>
+        <span class="success-order-card__value"><%= @order.created_at.strftime('%B %d, %Y') %></span>
+      </div>
+      <div class="success-order-card__row">
+        <span class="success-order-card__label">Status</span>
+        <span class="status-pill status--pending">Pending</span>
+      </div>
+      <div class="success-order-card__row">
+        <span class="success-order-card__label">Ship To</span>
+        <span class="success-order-card__value"><%= @order.shipping_address %></span>
+      </div>
+      <% if @card_last4.present? %>
+        <div class="success-order-card__row">
+          <span class="success-order-card__label">Payment</span>
+          <span class="success-order-card__value">
+            <%= @card_brand %> ending in <strong><%= @card_last4 %></strong>
+          </span>
+        </div>
+      <% end %>
+    </div>
+
+    <!-- Items -->
+    <div class="success-items">
+      <h3 class="success-items__title">Items Ordered</h3>
+      <% @order.order_items.includes(:product).each do |item| %>
+        <div class="success-item">
+          <% if item.product.image_url.present? %>
+            <img src="<%= item.product.image_url %>" alt="<%= item.product.name %>" class="success-item__img">
+          <% else %>
+            <div class="success-item__img success-item__img--placeholder">☕</div>
+          <% end %>
+          <div class="success-item__info">
+            <p class="success-item__name"><%= item.product.name %></p>
+            <p class="success-item__meta">Qty: <%= item.quantity %></p>
+          </div>
+          <p class="success-item__price"><%= format_price(item.subtotal) %></p>
+        </div>
+      <% end %>
+      <div class="success-total">
+        <span>Total Charged</span>
+        <span class="success-total__price"><%= format_price(@order.total_price) %></span>
+      </div>
+    </div>
+
+    <div class="success-actions">
+      <%= link_to 'View Order Details', order_path(@order), class: 'btn btn--outline' %>
+      <%= link_to 'Continue Shopping', products_path, class: 'btn btn--primary' %>
+    </div>
+
+    <p class="success-footer-note">
+      A confirmation email would be sent to <strong><%= current_user.email %></strong> in a real deployment.
+    </p>
+  </div>
+</section>

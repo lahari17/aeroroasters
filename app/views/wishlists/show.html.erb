@@ -1,0 +1,41 @@
+<% content_for :title, "My Wishlist – AeroRoasters" %>
+
+<section class="wishlist-page container">
+  <h1 class="page-title">My Wishlist</h1>
+
+  <% if @wishlist.products.empty? %>
+    <div class="empty-state">
+      <p>♡ Your wishlist is empty.</p>
+      <%= link_to 'Discover Coffee', products_path, class: 'btn btn--primary' %>
+    </div>
+  <% else %>
+    <div class="products-grid">
+      <% @wishlist.products.includes(:category).each do |product| %>
+        <div class="product-card">
+          <%= link_to product_path(product.slug) do %>
+            <div class="product-card__image-wrap">
+              <% if product.image_url.present? %>
+                <img src="<%= product.image_url %>" alt="<%= product.name %>" class="product-card__image">
+              <% else %>
+                <div class="product-card__placeholder">☕</div>
+              <% end %>
+            </div>
+            <div class="product-card__body">
+              <p class="product-card__category"><%= product.category.name %></p>
+              <h3 class="product-card__name"><%= product.name %></h3>
+              <p class="product-card__price"><%= format_price(product.price) %></p>
+            </div>
+          <% end %>
+          <div class="product-card__footer">
+            <%= form_with url: line_items_path, method: :post, local: true do |f| %>
+              <%= f.hidden_field :product_id, value: product.id %>
+              <%= f.hidden_field :quantity, value: 1 %>
+              <%= f.submit 'Move to Cart', class: 'btn btn--primary btn--full' %>
+            <% end %>
+            <%= link_to '✕ Remove', remove_product_wishlist_path(product_id: product.id), data: { turbo_method: :delete }, class: 'btn btn--ghost btn--full btn--sm' %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+</section>

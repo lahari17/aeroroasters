@@ -1,0 +1,54 @@
+<% content_for :title, "Shop Coffee – AeroRoasters" %>
+
+<section class="shop-page">
+  <div class="container">
+    <div class="shop-page__header">
+      <h1 class="page-title">
+        <% if @active_category %>
+          <%= @active_category.name %>
+        <% else %>
+          All Coffee
+        <% end %>
+      </h1>
+      <!-- Search -->
+      <%= form_with url: products_path, method: :get, local: true, class: 'search-form' do |f| %>
+        <%= f.text_field :q, value: params[:q], placeholder: 'Search blends...', class: 'input' %>
+        <%= f.hidden_field :category, value: params[:category] %>
+        <%= f.submit 'Search', class: 'btn btn--primary' %>
+      <% end %>
+    </div>
+
+    <div class="shop-layout">
+      <!-- Sidebar -->
+      <aside class="sidebar">
+        <h3 class="sidebar__title">Categories</h3>
+        <ul class="sidebar__list">
+          <li class="<%= 'active' if params[:category].blank? %>">
+            <%= link_to 'All Coffee', products_path(q: params[:q]) %>
+          </li>
+          <% @categories.each do |cat| %>
+            <li class="<%= 'active' if params[:category] == cat.slug %>">
+              <%= link_to cat.name, products_path(category: cat.slug, q: params[:q]) %>
+            </li>
+          <% end %>
+        </ul>
+      </aside>
+
+      <!-- Products -->
+      <div class="products-area">
+        <% if @products.any? %>
+          <div class="products-grid">
+            <% @products.each do |product| %>
+              <%= render 'product_card', product: product %>
+            <% end %>
+          </div>
+        <% else %>
+          <div class="empty-state">
+            <p>☕ No products found. Try a different category or search.</p>
+            <%= link_to 'Clear filters', products_path, class: 'btn btn--outline' %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</section>

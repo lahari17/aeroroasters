@@ -1,0 +1,26 @@
+<div class="product-card">
+  <%= link_to product_path(product.slug) do %>
+    <div class="product-card__image-wrap">
+      <% if product.image_url.present? %>
+        <img src="<%= product.image_url %>" alt="<%= product.name %>" class="product-card__image" loading="lazy">
+      <% else %>
+        <div class="product-card__placeholder">☕</div>
+      <% end %>
+      <% if product.featured? %>
+        <span class="product-card__badge">Featured</span>
+      <% end %>
+    </div>
+    <div class="product-card__body">
+      <p class="product-card__category"><%= product.category.name %></p>
+      <h3 class="product-card__name"><%= product.name %></h3>
+      <p class="product-card__price"><%= format_price(product.price) %></p>
+    </div>
+  <% end %>
+  <div class="product-card__footer">
+    <%= form_with url: line_items_path, method: :post, local: true do |f| %>
+      <%= f.hidden_field :product_id, value: product.id %>
+      <%= f.hidden_field :quantity, value: 1 %>
+      <%= f.submit 'Add to Cart', class: 'btn btn--primary btn--full' %>
+    <% end %>
+  </div>
+</div>

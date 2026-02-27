@@ -1,0 +1,53 @@
+# See https://help.github.com/articles/ignoring-files for more about ignoring files.
+
+# ── Bundler ────────────────────────────────────────────────
+/.bundle
+
+# ── Environment / Secrets ──────────────────────────────────
+/.env*
+/config/master.key
+/config/*.key
+/config/credentials/*.key
+
+# ── SQLite databases ───────────────────────────────────────
+*.sqlite3
+*.sqlite3-journal
+*.sqlite3-wal
+*.sqlite3-shm
+
+# ── Logs & Temp files ──────────────────────────────────────
+/log/*
+/tmp/*
+!/log/.keep
+!/tmp/.keep
+/tmp/pids/*
+!/tmp/pids/
+!/tmp/pids/.keep
+
+# ── Storage (uploads + local sqlite in storage/) ──────────
+/storage/*
+!/storage/.keep
+/tmp/storage/*
+!/tmp/storage/
+!/tmp/storage/.keep
+
+# ── Asset pipeline ─────────────────────────────────────────
+/public/assets
+/public/packs
+/public/packs-test
+
+# ── Spring / Bootsnap cache ────────────────────────────────
+/tmp/cache/bootsnap*
+/.spring
+
+# ── OS & Editor files ──────────────────────────────────────
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+.idea/
+.vscode/
+
+# ── Node (if using jsbundling/cssbundling) ─────────────────
+node_modules/
+yarn-error.log

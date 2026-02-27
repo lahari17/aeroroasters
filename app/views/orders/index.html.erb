@@ -1,0 +1,33 @@
+<% content_for :title, "My Orders – AeroRoasters" %>
+
+<section class="orders-page container">
+  <h1 class="page-title">My Orders</h1>
+
+  <% if @orders.empty? %>
+    <div class="empty-state">
+      <p>☕ You haven't placed any orders yet.</p>
+      <%= link_to 'Shop Now', products_path, class: 'btn btn--primary' %>
+    </div>
+  <% else %>
+    <div class="orders-list">
+      <% @orders.each do |order| %>
+        <div class="order-card">
+          <div class="order-card__header">
+            <div>
+              <p class="order-card__id">Order #<%= order.id %></p>
+              <p class="order-card__date"><%= order.created_at.strftime('%B %d, %Y') %></p>
+            </div>
+            <span class="status-pill <%= order_status_class(order.status) %>"><%= order.status.capitalize %></span>
+          </div>
+          <div class="order-card__items">
+            <%= order.order_items.count %> item(s)
+          </div>
+          <div class="order-card__footer">
+            <span class="order-card__total"><%= format_price(order.total_price) %></span>
+            <%= link_to 'View Details', order_path(order), class: 'btn btn--sm btn--outline' %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+</section>

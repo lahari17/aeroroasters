@@ -1,0 +1,45 @@
+<div class="auth-page">
+  <div class="auth-card">
+    <div class="auth-card__logo">☕ AeroRoasters</div>
+    <h1 class="auth-card__title">Create your account</h1>
+    <p class="auth-card__sub">Join thousands of coffee lovers.</p>
+
+    <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { class: 'auth-form' }) do |f| %>
+      <%= render "devise/shared/error_messages", resource: resource %>
+      <div class="form-row">
+        <div>
+          <%= f.label :first_name, class: 'label' %>
+          <%= f.text_field :first_name, autofocus: true, autocomplete: 'given-name', class: 'input' %>
+        </div>
+        <div>
+          <%= f.label :last_name, class: 'label' %>
+          <%= f.text_field :last_name, autocomplete: 'family-name', class: 'input' %>
+        </div>
+      </div>
+      <div>
+        <%= f.label :email, class: 'label' %>
+        <%= f.email_field :email, autocomplete: 'email', class: 'input' %>
+      </div>
+      <div>
+        <%= f.label :phone, class: 'label' %>
+        <%= f.telephone_field :phone, autocomplete: 'tel', class: 'input', placeholder: 'Optional' %>
+      </div>
+      <div>
+        <%= f.label :password, class: 'label' %>
+        <% if @minimum_password_length %>
+          <em class="text-muted">(<%= @minimum_password_length %> characters minimum)</em>
+        <% end %>
+        <%= f.password_field :password, autocomplete: 'new-password', class: 'input' %>
+      </div>
+      <div>
+        <%= f.label :password_confirmation, class: 'label' %>
+        <%= f.password_field :password_confirmation, autocomplete: 'new-password', class: 'input' %>
+      </div>
+      <%= f.submit 'Create Account', class: 'btn btn--primary btn--full btn--lg' %>
+    <% end %>
+
+    <div class="auth-links">
+      <p>Already have an account? <%= link_to 'Sign in', new_session_path(resource_name) %></p>
+    </div>
+  </div>
+</div>

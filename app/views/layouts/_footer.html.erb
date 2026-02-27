@@ -1,0 +1,35 @@
+<footer class="footer">
+  <div class="footer__container">
+    <div class="footer__brand">
+      <span class="footer__logo">☕ AeroRoasters</span>
+      <p class="footer__tagline">From farm to cup — ethically sourced, expertly roasted.</p>
+    </div>
+    <div class="footer__links">
+      <div class="footer__col">
+        <h4>Shop</h4>
+        <ul>
+          <li><%= link_to 'All Coffee', products_path %></li>
+          <li><%= link_to 'Whole Bean', products_path(category: 'whole-bean') %></li>
+          <li><%= link_to 'Espresso', products_path(category: 'espresso') %></li>
+          <li><%= link_to 'Cold Brew', products_path(category: 'cold-brew') %></li>
+        </ul>
+      </div>
+      <div class="footer__col">
+        <h4>Account</h4>
+        <ul>
+          <% if user_signed_in? %>
+            <li><%= link_to 'My Orders', orders_path %></li>
+            <li><%= link_to 'My Wishlist', wishlist_path %></li>
+            <li><%= link_to 'Sign Out', destroy_user_session_path, data: { turbo_method: :delete } %></li>
+          <% else %>
+            <li><%= link_to 'Sign In', new_user_session_path %></li>
+            <li><%= link_to 'Register', new_user_registration_path %></li>
+          <% end %>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="footer__bottom">
+    <p>&copy; <%= Date.today.year %> AeroRoasters. All rights reserved.</p>
+  </div>
+</footer>

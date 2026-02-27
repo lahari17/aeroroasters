@@ -1,0 +1,232 @@
+<% content_for :title, "Checkout – AeroRoasters" %>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<section class="checkout-page container">
+  <div class="checkout-breadcrumb">
+    <%= link_to '← Back to Cart', cart_path, class: 'breadcrumb-link' %>
+  </div>
+
+  <h1 class="page-title">Secure Checkout</h1>
+
+  <div class="checkout-layout">
+
+    <!-- ── LEFT: Forms ───────────────────────── -->
+    <%= form_with url: checkout_path, method: :post, local: true,
+          class: 'checkout-form', id: 'checkout-form' do |f| %>
+
+      <!-- Step 1: Shipping -->
+      <div class="checkout-step">
+        <div class="checkout-step__header">
+          <span class="checkout-step__num">1</span>
+          <h2 class="checkout-step__title">Shipping Address</h2>
+        </div>
+        <div class="checkout-step__body">
+          <%= f.text_area :shipping_address, rows: 3, class: 'input',
+              placeholder: "123 Coffee Lane, Seattle, WA 98101",
+              required: true, name: 'checkout[shipping_address]' %>
+        </div>
+      </div>
+
+      <!-- Step 2: Payment Card UI -->
+      <div class="checkout-step">
+        <div class="checkout-step__header">
+          <span class="checkout-step__num">2</span>
+          <h2 class="checkout-step__title">Payment Details</h2>
+          <div class="card-brands">
+            <i class="fa-brands fa-cc-visa"></i>
+            <i class="fa-brands fa-cc-mastercard"></i>
+            <i class="fa-brands fa-cc-amex"></i>
+          </div>
+        </div>
+        <div class="checkout-step__body">
+
+          <!-- Live Card Preview -->
+          <div class="card-scene" id="card-scene">
+            <div class="credit-card" id="credit-card">
+              <div class="credit-card__front">
+                <div class="credit-card__chip">
+                  <div class="chip-line"></div><div class="chip-line"></div>
+                  <div class="chip-line"></div><div class="chip-line"></div>
+                </div>
+                <div class="credit-card__logo">☕ AeroRoasters</div>
+                <div class="credit-card__number" id="preview-number">•••• •••• •••• ••••</div>
+                <div class="credit-card__bottom">
+                  <div>
+                    <div class="credit-card__label">Card Holder</div>
+                    <div class="credit-card__holder" id="preview-name">FULL NAME</div>
+                  </div>
+                  <div>
+                    <div class="credit-card__label">Expires</div>
+                    <div class="credit-card__expiry" id="preview-expiry">MM/YY</div>
+                  </div>
+                </div>
+              </div>
+              <div class="credit-card__back">
+                <div class="credit-card__stripe"></div>
+                <div class="credit-card__cvv-area">
+                  <span class="credit-card__label">CVV</span>
+                  <div class="credit-card__cvv-box" id="preview-cvv">•••</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card Inputs -->
+          <div class="card-inputs">
+            <div class="form-group">
+              <label class="label">Cardholder Name</label>
+              <input type="text" id="card-name" class="input" placeholder="Alex Roaster"
+                     autocomplete="cc-name" maxlength="26">
+            </div>
+            <div class="form-group">
+              <label class="label">Card Number</label>
+              <div class="input-icon-wrap">
+                <input type="text" id="card-number" class="input" placeholder="1234 5678 9012 3456"
+                       autocomplete="cc-number" maxlength="19" inputmode="numeric">
+                <span class="input-card-icon" id="card-type-icon"><i class="fa-solid fa-credit-card"></i></span>
+              </div>
+            </div>
+            <div class="card-inputs__row">
+              <div class="form-group">
+                <label class="label">Expiry Date</label>
+                <input type="text" id="card-expiry" class="input" placeholder="MM/YY"
+                       autocomplete="cc-exp" maxlength="5" inputmode="numeric">
+              </div>
+              <div class="form-group">
+                <label class="label">CVV</label>
+                <input type="text" id="card-cvv" class="input" placeholder="•••"
+                       autocomplete="cc-csc" maxlength="4" inputmode="numeric">
+              </div>
+            </div>
+          </div>
+
+          <!-- Hidden dummy payment fields (for UX only — no real processing) -->
+          <input type="hidden" name="checkout[card_last4]" id="hidden-last4" value="">
+          <input type="hidden" name="checkout[card_brand]" id="hidden-brand" value="">
+
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn--primary btn--lg btn--full btn--pay" id="pay-btn">
+        <i class="fa-solid fa-lock"></i>
+        <span>Place Order Securely</span>
+      </button>
+      <p class="checkout-secure-note">
+        <i class="fa-solid fa-shield-halved"></i>
+        Your payment info is for demo purposes only. No real charges are made.
+      </p>
+    <% end %>
+
+    <!-- ── RIGHT: Order Summary ───────────────── -->
+    <aside class="checkout-summary">
+      <h3 class="cart-summary__title">Order Summary</h3>
+      <% @cart.line_items.each do |item| %>
+        <div class="checkout-summary__item">
+          <div class="checkout-summary__item-info">
+            <span class="checkout-summary__qty">×<%= item.quantity %></span>
+            <span><%= item.product.name %></span>
+          </div>
+          <span><%= format_price(item.subtotal) %></span>
+        </div>
+      <% end %>
+      <div class="checkout-summary__divider"></div>
+      <div class="cart-summary__row">
+        <span>Subtotal</span>
+        <span><%= format_price(@cart.total_price) %></span>
+      </div>
+      <div class="cart-summary__row">
+        <span>Shipping</span>
+        <span class="text-green">Free ☕</span>
+      </div>
+      <div class="cart-summary__row cart-summary__row--total">
+        <span>Total</span>
+        <span><%= format_price(@cart.total_price) %></span>
+      </div>
+    </aside>
+  </div>
+</section>
+
+<!-- ── Card UX JavaScript ──────────────────────── -->
+<script>
+(function() {
+  const cardEl     = document.getElementById('credit-card');
+  const nameInput  = document.getElementById('card-name');
+  const numInput   = document.getElementById('card-number');
+  const expInput   = document.getElementById('card-expiry');
+  const cvvInput   = document.getElementById('card-cvv');
+  const previewNum = document.getElementById('preview-number');
+  const previewName= document.getElementById('preview-name');
+  const previewExp = document.getElementById('preview-expiry');
+  const previewCvv = document.getElementById('preview-cvv');
+  const cardIcon   = document.getElementById('card-type-icon');
+  const hiddenLast4= document.getElementById('hidden-last4');
+  const hiddenBrand= document.getElementById('hidden-brand');
+  const payBtn     = document.getElementById('pay-btn');
+
+  // Card number formatting & brand detection
+  numInput.addEventListener('input', function(e) {
+    let val = e.target.value.replace(/\D/g, '').substring(0, 16);
+    let formatted = val.match(/.{1,4}/g)?.join(' ') || '';
+    e.target.value = formatted;
+
+    let display = formatted.replace(/\d(?=\d{4}\s|.{0,3}$)/g, '•') || '•••• •••• •••• ••••';
+    if (formatted.length === 0) display = '•••• •••• •••• ••••';
+    previewNum.textContent = formatted.padEnd(19, '•').replace(/•/g, '').length > 0
+      ? formatted.padEnd(19-formatted.length, '') : '•••• •••• •••• ••••';
+
+    // Show live number (mask middle)
+    let raw = val;
+    let masked = raw.length > 0
+      ? (raw.substring(0,4) + ' ' +
+         (raw.length > 4 ? raw.substring(4,8).replace(/\d/g, '•') : '••••') + ' ' +
+         (raw.length > 8 ? raw.substring(8,12).replace(/\d/g, '•') : '••••') + ' ' +
+         (raw.length > 12 ? raw.substring(12,16) : '••••'))
+      : '•••• •••• •••• ••••';
+    previewNum.textContent = masked.trim();
+
+    // Brand detection
+    let brand = 'other';
+    let icon = '<i class="fa-solid fa-credit-card"></i>';
+    if (/^4/.test(raw)) { brand = 'Visa'; icon = '<i class="fa-brands fa-cc-visa"></i>'; }
+    else if (/^5[1-5]/.test(raw)) { brand = 'Mastercard'; icon = '<i class="fa-brands fa-cc-mastercard"></i>'; }
+    else if (/^3[47]/.test(raw)) { brand = 'Amex'; icon = '<i class="fa-brands fa-cc-amex"></i>'; }
+    cardIcon.innerHTML = icon;
+    hiddenBrand.value = brand;
+    hiddenLast4.value = raw.slice(-4);
+  });
+
+  // Name
+  nameInput.addEventListener('input', function(e) {
+    previewName.textContent = e.target.value.toUpperCase() || 'FULL NAME';
+  });
+
+  // Expiry
+  expInput.addEventListener('input', function(e) {
+    let val = e.target.value.replace(/\D/g, '').substring(0, 4);
+    if (val.length >= 2) val = val.substring(0,2) + '/' + val.substring(2);
+    e.target.value = val;
+    previewExp.textContent = val || 'MM/YY';
+  });
+
+  // CVV — flip card
+  cvvInput.addEventListener('focus', function() { cardEl.classList.add('is-flipped'); });
+  cvvInput.addEventListener('blur',  function() { cardEl.classList.remove('is-flipped'); });
+  cvvInput.addEventListener('input', function(e) {
+    let val = e.target.value.replace(/\D/g, '').substring(0, 4);
+    e.target.value = val;
+    previewCvv.textContent = val.replace(/\d/g, '•') || '•••';
+  });
+
+  // Click elsewhere unflips
+  document.getElementById('checkout-form').addEventListener('click', function(e) {
+    if (e.target !== cvvInput) cardEl.classList.remove('is-flipped');
+  });
+
+  // Submit loading state
+  document.getElementById('checkout-form').addEventListener('submit', function() {
+    payBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Processing…';
+    payBtn.disabled = true;
+  });
+})();
+</script>
