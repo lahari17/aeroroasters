@@ -116,13 +116,4 @@ C:\Ruby33-x64\bin\rails console
 ```
 
 ---
-
-## 📄 Resume Summary
-
-> Built **AeroRoasters**, a full-stack Ruby on Rails 8 e-commerce application featuring Devise authentication, a 9-table relational SQLite schema, persistent shopping cart, transactional checkout via Service Objects, order management, and a polished payment card UX with live 3D CSS animations — all styled with a custom vanilla CSS design system and zero frontend frameworks.
-
-**Keywords:** `Ruby on Rails 8` · `Ruby 3.3` · `SQLite / Active Record` · `Devise` · `Hotwire / Turbo` · `ERB` · `Vanilla CSS & JS` · `REST` · `MVC` · `Service Objects`
-
----
-
 *See [`DEVELOPER_GUIDE.md`](DEVELOPER_GUIDE.md) for the full folder structure and technical documentation.*
